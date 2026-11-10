@@ -13,25 +13,59 @@
 </head>
 <body>
   <main>
-    <section class="cover" id="card" aria-labelledby="card-name" tabindex="-1">
+    <section class="cover" id="card" aria-label="Qinrong Cui’s business card" tabindex="-1">
       <div class="card-stage">
-        <div class="business-card paper">
-          <div class="card-corners">
-            <span>Abu Dhabi</span>
-            <div class="card-affiliation">
-              <strong>MBZUAI</strong>
-              <span>Natural Language Processing</span>
+        <button class="card-flip small-print" type="button" aria-controls="card-contact" aria-expanded="false" hidden>
+          <svg width="15" height="15" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+            <path d="M12.9 7.3A5 5 0 1 0 12 11m.9-6.8v3.1H9.8" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+          Flip card
+        </button>
+
+        <div class="business-card">
+          <div class="card-side card-front paper">
+            <div class="card-corners">
+              <a class="card-phone" href="tel:+18578699213">857.869.9213</a>
+              <div class="card-affiliation">
+                <strong>MBZUAI</strong>
+                <span>Natural Language Processing</span>
+              </div>
+            </div>
+
+            <div class="card-identity">
+              <h1 id="card-name">Qinrong <span class="card-surname">Cui</span></h1>
+              <p>M.Sc. Student</p>
+            </div>
+
+            <div class="card-details">
+              <span>Beijing / Abu Dhabi</span>
+              <a href="mailto:qinrongcui@foxmail.com">qinrongcui@foxmail.com</a>
             </div>
           </div>
 
-          <div class="card-identity">
-            <h1 id="card-name">Qinrong Cui</h1>
-            <p>M.Sc. Student</p>
-          </div>
-
-          <div class="card-details">
-            <span>United Arab Emirates</span>
-            <a href="https://github.com/Qinmayyear">github.com/Qinmayyear</a>
+          <div class="card-side card-back paper" id="card-contact" inert>
+            <div class="card-back-heading">
+              <h2>Contact</h2>
+              <span>Beijing / Abu Dhabi</span>
+            </div>
+            <dl class="card-contact-list">
+              <div>
+                <dt>Email</dt>
+                <dd><a href="mailto:qinrongcui@foxmail.com">qinrongcui@foxmail.com</a></dd>
+              </div>
+              <div>
+                <dt>Phone</dt>
+                <dd><a href="tel:+18578699213">+1 857.869.9213</a></dd>
+              </div>
+              <div>
+                <dt>GitHub</dt>
+                <dd><a href="https://github.com/Qinmayyear">@Qinmayyear <span aria-hidden="true">↗</span></a></dd>
+              </div>
+              <div>
+                <dt>LinkedIn</dt>
+                <dd><a href="https://www.linkedin.com/in/qinrong-cui-92b93a1bb/">Qinrong Cui <span aria-hidden="true">↗</span></a></dd>
+              </div>
+            </dl>
           </div>
         </div>
       </div>

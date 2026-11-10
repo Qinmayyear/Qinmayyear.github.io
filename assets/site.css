@@ -6,7 +6,8 @@
   --oxblood: #743c33;
   --rule: #a79a86;
   --book-face: Baskerville, "Book Antiqua", Georgia, serif;
-  --card-face: "Copperplate Gothic Light", Copperplate, Georgia, serif;
+  --card-face: "Copperplate Gothic Light", "Copperplate Gothic", Copperplate, Georgia, serif;
+  --card-bold-face: "Copperplate Gothic Bold", "Copperplate Gothic", Copperplate, Georgia, serif;
   --index-face: "SFMono-Regular", Consolas, "Liberation Mono", monospace;
   scroll-behavior: smooth;
   scrollbar-color: #8a7664 var(--desk);
@@ -104,6 +105,7 @@ a:focus-visible {
 }
 
 .card-stage {
+  position: relative;
   inline-size: min(85vw, 35rem);
   container-type: inline-size;
   perspective: 1100px;
@@ -111,12 +113,29 @@ a:focus-visible {
 }
 
 .business-card {
-  --paper-grain: 0.12;
   --tilt-x: 0deg;
   --tilt-y: 0deg;
+  --card-turn: 0deg;
   display: grid;
-  grid-template-rows: 1fr auto 1fr;
   aspect-ratio: 7 / 4;
+  transform: rotateZ(-2.5deg) rotateX(calc(6deg + var(--tilt-x))) rotateY(calc(-6deg + var(--tilt-y) + var(--card-turn)));
+  transform-style: preserve-3d;
+  transition: transform 460ms cubic-bezier(0.2, 0.75, 0.24, 1);
+}
+
+.business-card.is-flipped {
+  --card-turn: 180deg;
+}
+
+.card-flip:not([hidden]) + .business-card {
+  cursor: pointer;
+}
+
+.card-side {
+  --paper-grain: 0.185;
+  display: grid;
+  grid-area: 1 / 1;
+  min-inline-size: 0;
   padding: 5.4% 6%;
   border-radius: 1px;
   background:
@@ -133,8 +152,13 @@ a:focus-visible {
   font: 400 0.75rem/1.22 var(--card-face);
   font-size: clamp(0.6875rem, 2.12cqi, 0.75rem);
   font-variant-caps: small-caps;
-  transform: rotateZ(-2.5deg) rotateX(calc(6deg + var(--tilt-x))) rotateY(calc(-6deg + var(--tilt-y)));
-  transition: transform 420ms cubic-bezier(0.2, 0.75, 0.24, 1);
+  text-shadow: 0 -0.45px 0 rgb(69 45 30 / 0.38), 0 0.65px 0 rgb(255 252 243 / 0.85);
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
+}
+
+.card-front {
+  grid-template-rows: 1fr auto 1fr;
 }
 
 .card-corners {
@@ -143,6 +167,12 @@ a:focus-visible {
   justify-content: space-between;
   gap: 0.5rem;
   align-self: start;
+}
+
+.card-phone {
+  font-size: clamp(0.75rem, 2.68cqi, 0.9375rem);
+  font-variant-numeric: lining-nums tabular-nums;
+  white-space: nowrap;
 }
 
 .card-affiliation {
@@ -158,21 +188,27 @@ a:focus-visible {
 }
 
 .card-identity {
+  font-family: var(--card-bold-face);
+  font-weight: 700;
   text-align: center;
 }
 
 .card-identity h1 {
   font-size: clamp(1.375rem, 6.25cqi, 2.25rem);
-  font-weight: 400;
-  letter-spacing: 0.045em;
+  font-weight: inherit;
+  letter-spacing: 0.008em;
   line-height: 1.06;
-  text-shadow: 0 1px rgb(255 255 255 / 0.72);
+}
+
+.card-surname {
+  font-variant-caps: normal;
+  text-transform: uppercase;
 }
 
 .card-identity p {
   margin-block-start: 0.3em;
   font-size: clamp(0.75rem, 2.55cqi, 0.9375rem);
-  letter-spacing: 0.045em;
+  letter-spacing: 0.01em;
 }
 
 .card-details {
@@ -183,13 +219,106 @@ a:focus-visible {
   text-align: center;
 }
 
-.card-details a {
+.card-side a {
   text-decoration: none;
 }
 
-.card-details a:hover,
-.card-details a:focus-visible {
+.card-side a:hover,
+.card-side a:focus-visible {
   text-decoration: underline;
+}
+
+.card-back {
+  grid-template-rows: auto 1fr;
+  row-gap: clamp(0.3rem, 1.7cqi, 0.75rem);
+  transform: rotateY(180deg);
+}
+
+.card-back-heading {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 0.1rem 0.6rem;
+  padding-block-end: 0.5em;
+  border-block-end: 1px solid var(--rule);
+}
+
+.card-back-heading h2 {
+  font: 700 clamp(1.125rem, 4.3cqi, 1.5rem)/1 var(--card-bold-face);
+}
+
+.card-back-heading span {
+  color: var(--muted-ink);
+}
+
+.card-contact-list {
+  display: grid;
+  grid-template-rows: repeat(4, 1fr);
+  margin: 0;
+}
+
+.card-contact-list > div {
+  display: grid;
+  grid-template-columns: minmax(3.45rem, 24%) minmax(0, 1fr);
+  align-items: center;
+  gap: 0.45rem;
+  border-block-end: 1px solid rgb(98 77 56 / 0.23);
+}
+
+.card-contact-list > div:last-child {
+  border-block-end: 0;
+}
+
+.card-contact-list dt {
+  color: var(--muted-ink);
+  font: 500 clamp(0.575rem, 1.94cqi, 0.6875rem)/1.2 var(--index-face);
+  letter-spacing: 0.08em;
+  text-shadow: none;
+  text-transform: uppercase;
+}
+
+.card-contact-list dd {
+  margin: 0;
+  font-size: clamp(0.75rem, 2.75cqi, 0.9375rem);
+}
+
+.card-contact-list a {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.35em;
+  min-block-size: 1.5rem;
+  overflow-wrap: anywhere;
+}
+
+.card-contact-list a span {
+  color: var(--oxblood);
+}
+
+.card-flip:not([hidden]) {
+  position: absolute;
+  inset-block-start: calc(100% + 0.6rem);
+  inset-inline-end: 0;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  min-block-size: 2.75rem;
+  padding: 0 0.65rem;
+  border: 0;
+  border-radius: 1px;
+  background: transparent;
+  color: #f0e5d4;
+  cursor: pointer;
+}
+
+.card-flip:hover {
+  background: rgb(247 235 218 / 0.10);
+}
+
+.card-flip:focus-visible {
+  outline: 2px solid currentColor;
+  outline-offset: 2px;
 }
 
 .open-profile {
@@ -235,7 +364,7 @@ a:focus-visible {
 }
 
 .profile-sheet {
-  --paper-grain: 0.22;
+  --paper-grain: 0.26;
   inline-size: min(100%, 62rem);
   padding: clamp(1.5rem, 4.7vw, 4.25rem) clamp(1.25rem, 6.2vw, 5.25rem);
   border: 1px solid rgb(94 66 43 / 0.24);
@@ -418,7 +547,7 @@ a:focus-visible {
   }
 
   .business-card {
-    transform: rotateZ(-2.5deg);
+    transform: rotateZ(-2.5deg) rotateY(var(--card-turn));
     transition: none;
   }
 
