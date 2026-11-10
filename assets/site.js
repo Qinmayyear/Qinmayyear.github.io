@@ -1,5 +1,8 @@
 (() => {
-  const cover = document.querySelector(".cover");
+  const desk = document.querySelector(".desk-story");
+  const arrival = desk.querySelector(".desk-arrival");
+  const cover = arrival.querySelector(".cover");
+  const folder = desk.querySelector(".file-folder");
   const stage = cover.querySelector(".card-stage");
   const card = stage.querySelector(".business-card");
   const front = card.querySelector(".card-front");
@@ -10,6 +13,7 @@
   const grooveHighlight = cover.querySelector("#groove-highlight");
   const windowLight = { x: -0.63, y: -0.61, z: 0.48 };
   const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
+  const deskMotion = window.matchMedia("(prefers-reduced-motion: no-preference) and (min-height: 31rem)");
   const finePointer = window.matchMedia("(hover: hover) and (pointer: fine)");
   const degreesPerRadian = 180 / Math.PI;
   let scrollFrame = null;
@@ -82,27 +86,41 @@
   });
   flipButton.hidden = false;
 
+  function easeProgress(progress) {
+    const fraction = Math.min(1, Math.max(0, progress));
+    return fraction * fraction * (3 - 2 * fraction);
+  }
+
   function updateScroll() {
     scrollFrame = null;
-    const progress = Math.min(1, Math.max(0, window.scrollY / cover.offsetHeight));
-    cover.style.setProperty("--scroll", progress.toFixed(3));
+    const travel = Math.max(1, arrival.offsetHeight - cover.offsetHeight);
+    const progress = easeProgress(-arrival.getBoundingClientRect().top / travel);
+    const viewport = window.innerHeight;
+    const folderTop = folder.getBoundingClientRect().top;
+    const opening = easeProgress((viewport * 0.88 - folderTop) / (viewport * 0.60));
+
+    desk.style.setProperty("--desk-progress", progress.toFixed(3));
+    folder.style.setProperty("--folder-progress", opening.toFixed(3));
+    arrival.classList.toggle("is-past-card", progress > 0.86);
   }
 
   function requestScrollUpdate() {
-    if (!reducedMotion.matches && scrollFrame === null) {
+    if (deskMotion.matches && scrollFrame === null) {
       scrollFrame = window.requestAnimationFrame(updateScroll);
     }
   }
 
+  desk.classList.add("desk-motion");
   window.addEventListener("scroll", requestScrollUpdate, { passive: true });
   window.addEventListener("resize", requestScrollUpdate);
-  reducedMotion.addEventListener("change", requestScrollUpdate);
+  deskMotion.addEventListener("change", requestScrollUpdate);
   reducedMotion.addEventListener("change", requestLightUpdate);
   requestScrollUpdate();
   requestLightUpdate();
 
   card.addEventListener("pointermove", (event) => {
     if (reducedMotion.matches || !finePointer.matches || event.pointerType !== "mouse") return;
+    if (event.target.closest(".card-back a")) return;
 
     const bounds = stage.getBoundingClientRect();
     const x = (event.clientX - bounds.left) / bounds.width - 0.5;

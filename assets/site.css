@@ -67,10 +67,39 @@ a:focus-visible {
   content: "";
 }
 
+/* The desk */
+
+.desk-story {
+  --desk-progress: 0;
+  position: relative;
+  isolation: isolate;
+}
+
+.desk-backdrop {
+  position: sticky;
+  z-index: -1;
+  inset-block-start: 0;
+  block-size: 100vh;
+  block-size: 100svh;
+  margin-block-end: -100vh;
+  margin-block-end: -100svh;
+  overflow: hidden;
+  background: #39291f;
+  pointer-events: none;
+}
+
+.desk-backdrop::before {
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(152deg, rgb(38 23 14 / 0.08), rgb(27 17 12 / 0.43)),
+    url("walnut-desk.webp") 50% 38% / cover no-repeat;
+  content: "";
+}
+
 /* The calling card */
 
 .cover {
-  --scroll: 0;
   position: relative;
   isolation: isolate;
   display: grid;
@@ -93,7 +122,6 @@ a:focus-visible {
   z-index: -2;
   inset: -5%;
   background: #34261e url("office.webp") 50% 53% / cover no-repeat;
-  transform: translateY(calc(48px * var(--scroll)));
 }
 
 .cover::after {
@@ -114,7 +142,6 @@ a:focus-visible {
   inline-size: min(85vw, 35rem);
   container-type: inline-size;
   perspective: 1100px;
-  transform: translateY(calc(-48px * var(--scroll))) scale(calc(1 - 0.075 * var(--scroll)));
 }
 
 .business-card {
@@ -180,10 +207,13 @@ a:focus-visible {
   pointer-events: none;
 }
 
-.card-identity,
-.card-back-heading h2 {
+.card-ink {
   filter: url("#pressed-ink");
   text-shadow: none;
+}
+
+span.card-ink {
+  display: inline-block;
 }
 
 .card-front {
@@ -206,7 +236,6 @@ a:focus-visible {
 
 .card-affiliation {
   display: grid;
-  gap: 0.12em;
   text-align: right;
 }
 
@@ -214,6 +243,11 @@ a:focus-visible {
   font-size: clamp(0.875rem, 3.65cqi, 1.375rem);
   font-weight: 400;
   letter-spacing: 0.05em;
+  line-height: 1;
+}
+
+.card-affiliation span {
+  line-height: 1.1;
 }
 
 .card-identity {
@@ -252,8 +286,8 @@ a:focus-visible {
   text-decoration: none;
 }
 
-.card-side a:hover,
-.card-side a:focus-visible {
+.card-front a:hover,
+.card-front a:focus-visible {
   text-decoration: underline;
 }
 
@@ -270,7 +304,6 @@ a:focus-visible {
   align-items: baseline;
   gap: 0.1rem 0.6rem;
   padding-block-end: 0.5em;
-  border-block-end: 1px solid var(--rule);
 }
 
 .card-back-heading h2 {
@@ -289,21 +322,37 @@ a:focus-visible {
 
 .card-contact-list > div {
   display: grid;
-  grid-template-columns: minmax(3.45rem, 24%) minmax(0, 1fr);
+  grid-template-columns: minmax(3.65rem, 24%) minmax(0, 1fr);
   align-items: center;
   gap: 0.45rem;
-  border-block-end: 1px solid rgb(98 77 56 / 0.23);
 }
 
-.card-contact-list > div:last-child {
-  border-block-end: 0;
+.card-back-heading,
+.card-contact-list > div {
+  position: relative;
+}
+
+.card-back-heading::after,
+.card-contact-list > div:not(:last-child)::after {
+  position: absolute;
+  inset: auto 0 0;
+  block-size: 1px;
+  background: rgb(98 73 50 / 0.25);
+  box-shadow:
+    calc(-0.55 * var(--rim-x)) calc(-0.55 * var(--rim-y)) 0 rgb(76 53 35 / 0.12),
+    var(--rim-x) var(--rim-y) 0 rgb(255 249 235 / 0.72);
+  pointer-events: none;
+  content: "";
+}
+
+.card-back-heading::after {
+  background: rgb(98 73 50 / 0.39);
 }
 
 .card-contact-list dt {
   color: var(--muted-ink);
-  font: 500 clamp(0.575rem, 1.94cqi, 0.6875rem)/1.2 var(--index-face);
-  letter-spacing: 0.08em;
-  text-shadow: none;
+  font-size: clamp(0.625rem, 2.05cqi, 0.75rem);
+  letter-spacing: 0.035em;
   text-transform: uppercase;
 }
 
@@ -316,7 +365,14 @@ a:focus-visible {
   display: flex;
   align-items: center;
   min-block-size: 1.5rem;
+  margin-inline-start: -0.35rem;
+  padding-inline: 0.35rem;
   overflow-wrap: anywhere;
+}
+
+.card-contact-list a:hover,
+.card-contact-list a:focus-visible {
+  background: rgb(118 76 44 / 0.08);
 }
 
 .card-flip:not([hidden]) {
@@ -367,35 +423,114 @@ a:focus-visible {
   transform: translateY(3px);
 }
 
-/* The profile sheet */
+/* The profile file */
 
 .profile-scene {
+  position: relative;
+  z-index: 1;
   display: grid;
   min-block-size: 100vh;
   min-block-size: 100svh;
   place-items: center;
-  padding: clamp(1.5rem, 5vw, 4.5rem) clamp(0.75rem, 4vw, 3rem);
-  background:
-    linear-gradient(var(--desk), transparent 14%, transparent 80%, var(--desk)),
-    radial-gradient(ellipse at 50% 52%, #463428, var(--desk) 74%);
+  padding: clamp(3.3rem, 5.3vw, 4.5rem) clamp(0.65rem, 4vw, 3rem) clamp(2.3rem, 4.4vw, 4rem);
+  overflow-x: clip;
 }
 
-.cover:focus-visible,
+.desk-arrival:focus-visible,
 .profile-scene:focus-visible {
   outline: 2px solid #efe4d2;
   outline-offset: -4px;
 }
 
-.profile-sheet {
-  --paper-grain: 0.14;
-  inline-size: min(100%, 62rem);
-  padding: clamp(1.5rem, 4.7vw, 4.25rem) clamp(1.25rem, 6.2vw, 5.25rem);
-  border: 1px solid rgb(94 66 43 / 0.24);
-  background: linear-gradient(154deg, #f7f0e1, #efe6d4 74%, #e8ddc8);
+.file-folder {
+  position: relative;
+  isolation: isolate;
+  inline-size: min(100%, 66rem);
+  padding: clamp(0.65rem, 2vw, 1.65rem);
+  border-radius: 3px 3px 5px 2px;
+  background:
+    linear-gradient(90deg, rgb(94 60 32 / 0.22), transparent 5%, transparent 94%, rgb(93 59 32 / 0.13)),
+    linear-gradient(151deg, #d4b78c, #bd9b6a);
   box-shadow:
-    1px 2px 0 #cec0a8,
-    2px 4px 0 #a69881,
-    5px 24px 50px -16px rgb(14 8 4 / 0.76);
+    inset 0 1px rgb(255 231 186 / 0.7),
+    0 2px 0 #a58356,
+    5px 21px 34px -9px rgb(20 11 6 / 0.68);
+  perspective: clamp(1350px, 205vw, 2650px);
+  perspective-origin: left center;
+}
+
+.folder-tab {
+  position: absolute;
+  inset-block-end: calc(100% - 2px);
+  inset-inline-end: clamp(0.85rem, 4vw, 2.85rem);
+  display: flex;
+  gap: 0.85em;
+  padding: 0.5rem 1rem 0.4rem;
+  border-radius: 5px 6px 0 0;
+  background: linear-gradient(#dec29b, #d3b68b);
+  box-shadow: inset 0 1px rgb(255 238 206 / 0.68), 3px -3px 13px rgb(22 12 6 / 0.21);
+  color: #5b412d;
+}
+
+.folder-tab span {
+  color: #75453a;
+}
+
+.folder-cover {
+  position: absolute;
+  z-index: 2;
+  inset: 0;
+  border-radius: inherit;
+  background:
+    linear-gradient(90deg, rgb(100 61 32 / 0.19), transparent 1.8%, transparent 98%, rgb(100 61 32 / 0.10)),
+    linear-gradient(132deg, #dec39a, #c8a776);
+  box-shadow: inset 0 0 0 1px rgb(113 75 44 / 0.25), 2px 4px 5px rgb(34 20 11 / 0.18);
+  transform: rotateY(-173deg);
+  transform-origin: left center;
+  transform-style: preserve-3d;
+  pointer-events: none;
+}
+
+.folder-label {
+  position: absolute;
+  inset-block-start: clamp(1.6rem, 6.4vw, 4.6rem);
+  inset-inline-end: clamp(1.25rem, 5vw, 4rem);
+  display: grid;
+  gap: 0.45rem;
+  min-inline-size: clamp(9rem, 22vw, 16rem);
+  padding: clamp(0.7rem, 2vw, 1.25rem);
+  border: 1px solid rgb(113 75 44 / 0.20);
+  background: linear-gradient(145deg, #f2e8d5, #e4d5b9);
+  box-shadow: 0 1px 2px rgb(86 54 28 / 0.22);
+  color: #634631;
+  transform: translateZ(1px) rotate(-1.75deg);
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
+}
+
+.folder-label p:last-child {
+  font-size: clamp(1.2rem, 3.2vw, 2.25rem);
+  line-height: 1.1;
+}
+
+.profile-sheet {
+  inline-size: 100%;
+  padding: clamp(1.5rem, 3.8vw, 3.7rem) clamp(1.15rem, 6vw, 5.1rem);
+  border: 1px solid rgb(94 66 43 / 0.18);
+  background:
+    radial-gradient(ellipse at 16% 0%, #fbf7ed, transparent 81%),
+    linear-gradient(155deg, #f3eddf, #ede4d2);
+  box-shadow:
+    1px 1px 0 #dbcdb3,
+    2px 3px 0 #c4ae89,
+    3px 8px 17px -6px rgb(56 34 18 / 0.55);
+}
+
+.profile-sheet::before {
+  background: url("cotton-paper.svg") repeat;
+  background-size: 160px 160px;
+  mix-blend-mode: soft-light;
+  opacity: 0.43;
 }
 
 .sheet-meta {
@@ -545,9 +680,76 @@ a:focus-visible {
   text-decoration: underline;
 }
 
+@media screen and (prefers-reduced-motion: no-preference) and (min-height: 31rem) {
+  .desk-motion .desk-arrival {
+    min-block-size: calc(100svh + clamp(14rem, 56svh, 31rem));
+  }
+
+  .desk-motion .cover {
+    position: sticky;
+    inset-block-start: 0;
+  }
+
+  .desk-motion .cover::before {
+    opacity: max(0, calc(1 - 1.32 * var(--desk-progress)));
+    transform: translateY(calc(-3.5svh * var(--desk-progress))) scale(calc(1 + 0.09 * var(--desk-progress)));
+  }
+
+  .desk-motion .cover::after {
+    opacity: calc(1 - var(--desk-progress));
+  }
+
+  .desk-motion .desk-backdrop::before {
+    transform: scale(calc(1.065 - 0.065 * var(--desk-progress)));
+    transform-origin: 43% 43%;
+  }
+
+  .desk-motion .card-stage {
+    transform:
+      translate3d(
+        calc(clamp(-27rem, -29vw, -4rem) * var(--desk-progress)),
+        calc(clamp(-17rem, -27svh, -6.5rem) * var(--desk-progress)),
+        0
+      )
+      rotateZ(calc(-6deg * var(--desk-progress)))
+      scale(calc(1 - 0.64 * var(--desk-progress)));
+  }
+
+  .desk-motion .card-flip:not(:focus-visible),
+  .desk-motion .open-profile:not(:focus-visible) {
+    opacity: max(0, calc(1 - 1.24 * var(--desk-progress)));
+  }
+
+  .is-past-card .card-flip:not(:focus-visible),
+  .is-past-card .open-profile:not(:focus-visible) {
+    visibility: hidden;
+  }
+
+  .is-past-card .card-stage {
+    pointer-events: none;
+  }
+
+  .desk-motion .profile-scene {
+    margin-block-start: calc(-1 * clamp(8rem, 30svh, 18rem));
+  }
+
+  .desk-motion .folder-cover {
+    transform: rotateY(calc(-173deg * var(--folder-progress, 0)));
+  }
+
+  .desk-motion .file-folder:focus-within .folder-cover,
+  .desk-motion .profile-scene:focus-visible .folder-cover {
+    transform: rotateY(-173deg);
+  }
+}
+
 @media (max-width: 42rem) {
   .cover::before {
     background-position: 24% 50%;
+  }
+
+  .desk-backdrop::before {
+    background-position: 53% 40%;
   }
 
   .sheet-columns {
@@ -562,11 +764,6 @@ a:focus-visible {
 @media (prefers-reduced-motion: reduce) {
   :root {
     scroll-behavior: auto;
-  }
-
-  .cover::before,
-  .card-stage {
-    transform: none;
   }
 
   .business-card {
@@ -588,8 +785,7 @@ a:focus-visible {
     display: none;
   }
 
-  .card-identity,
-  .card-back-heading h2 {
+  .card-ink {
     filter: none;
   }
 
@@ -600,18 +796,23 @@ a:focus-visible {
 
 @media print {
   body,
+  .file-folder,
   .profile-scene,
   .profile-sheet {
     background: white;
     color: black;
   }
 
-  .cover,
+  .desk-arrival,
+  .desk-backdrop,
+  .folder-tab,
+  .folder-cover,
   .profile-sheet::before,
   .back-to-card {
     display: none;
   }
 
+  .file-folder,
   .profile-scene,
   .profile-sheet {
     display: block;
@@ -620,5 +821,6 @@ a:focus-visible {
     padding: 0;
     border: 0;
     box-shadow: none;
+    perspective: none;
   }
 }

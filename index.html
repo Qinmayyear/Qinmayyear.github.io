@@ -8,174 +8,186 @@
   <title>Qinrong Cui</title>
   <link rel="icon" type="image/svg+xml" href="assets/monogram.svg">
   <link rel="preload" as="image" href="assets/office.webp">
-  <link rel="stylesheet" href="assets/site.css?v=paper-light">
-  <script src="assets/site.js?v=paper-light" defer></script>
+  <link rel="stylesheet" href="assets/site.css?v=desk-file">
+  <script src="assets/site.js?v=desk-file" defer></script>
 </head>
 <body>
-  <main>
-    <section class="cover" id="card" aria-label="Qinrong Cui’s business card" tabindex="-1">
-      <svg class="card-materials" width="0" height="0" aria-hidden="true" focusable="false">
-        <defs>
-          <filter id="fiber-relief" filterUnits="userSpaceOnUse" x="0" y="0" width="168" height="168" color-interpolation-filters="sRGB">
-            <feTurbulence type="fractalNoise" baseFrequency=".28 .57" numOctaves="2" seed="23" stitchTiles="stitch" result="fiber-height"/>
-            <feDiffuseLighting in="fiber-height" surfaceScale="1.45" lighting-color="#fff">
-              <feDistantLight data-card-light azimuth="225" elevation="38"/>
-            </feDiffuseLighting>
-          </filter>
-          <pattern id="lit-fibers" width="168" height="168" patternUnits="userSpaceOnUse">
-            <rect width="168" height="168" fill="#808080" filter="url(#fiber-relief)"/>
-          </pattern>
+  <main class="desk-story">
+    <div class="desk-backdrop" aria-hidden="true"></div>
+    <div class="desk-arrival" id="card" tabindex="-1">
+      <section class="cover" aria-label="Qinrong Cui’s business card">
+        <svg class="card-materials" width="0" height="0" aria-hidden="true" focusable="false">
+          <defs>
+            <filter id="fiber-relief" filterUnits="userSpaceOnUse" x="0" y="0" width="168" height="168" color-interpolation-filters="sRGB">
+              <feTurbulence type="fractalNoise" baseFrequency=".28 .57" numOctaves="2" seed="23" stitchTiles="stitch" result="fiber-height"/>
+              <feDiffuseLighting in="fiber-height" surfaceScale="1.45" lighting-color="#fff">
+                <feDistantLight data-card-light azimuth="225" elevation="38"/>
+              </feDiffuseLighting>
+            </filter>
+            <pattern id="lit-fibers" width="168" height="168" patternUnits="userSpaceOnUse">
+              <rect width="168" height="168" fill="#808080" filter="url(#fiber-relief)"/>
+            </pattern>
 
-          <filter id="pressed-ink" x="-10%" y="-24%" width="120%" height="148%" color-interpolation-filters="sRGB">
-            <feGaussianBlur in="SourceAlpha" stdDeviation=".55" result="glyph-depth"/>
-            <feDiffuseLighting in="glyph-depth" surfaceScale="-2.1" lighting-color="#fff" result="groove-light">
-              <feDistantLight data-card-light azimuth="225" elevation="38"/>
-            </feDiffuseLighting>
-            <feComponentTransfer in="groove-light" result="ink-tone">
-              <feFuncR type="linear" slope=".23" intercept=".048"/>
-              <feFuncG type="linear" slope=".18" intercept=".039"/>
-              <feFuncB type="linear" slope=".14" intercept=".031"/>
-            </feComponentTransfer>
-            <feComposite in="ink-tone" in2="SourceAlpha" operator="in" result="ink"/>
-            <feColorMatrix id="groove-shadow" in="groove-light" type="matrix" values="0 0 0 0 .39  0 0 0 0 .28  0 0 0 0 .19  -.72 0 0 0 .418" result="groove-shadow"/>
-            <feColorMatrix id="groove-highlight" in="groove-light" type="matrix" values="0 0 0 0 1  0 0 0 0 .99  0 0 0 0 .95  1.55 0 0 0 -.989" result="groove-highlight"/>
-            <feMerge>
-              <feMergeNode in="groove-shadow"/>
-              <feMergeNode in="groove-highlight"/>
-              <feMergeNode in="ink"/>
-            </feMerge>
-          </filter>
-        </defs>
-      </svg>
+            <filter id="pressed-ink" x="-10%" y="-24%" width="120%" height="148%" color-interpolation-filters="sRGB">
+              <feGaussianBlur in="SourceAlpha" stdDeviation=".55" result="glyph-depth"/>
+              <feDiffuseLighting in="glyph-depth" surfaceScale="-2.1" lighting-color="#fff" result="groove-light">
+                <feDistantLight data-card-light azimuth="225" elevation="38"/>
+              </feDiffuseLighting>
+              <feComponentTransfer in="groove-light" result="ink-tone">
+                <feFuncR type="linear" slope=".23" intercept=".048"/>
+                <feFuncG type="linear" slope=".18" intercept=".039"/>
+                <feFuncB type="linear" slope=".14" intercept=".031"/>
+              </feComponentTransfer>
+              <feComposite in="ink-tone" in2="SourceAlpha" operator="in" result="ink"/>
+              <feColorMatrix id="groove-shadow" in="groove-light" type="matrix" values="0 0 0 0 .39  0 0 0 0 .28  0 0 0 0 .19  -.72 0 0 0 .418" result="groove-shadow"/>
+              <feColorMatrix id="groove-highlight" in="groove-light" type="matrix" values="0 0 0 0 1  0 0 0 0 .99  0 0 0 0 .95  1.55 0 0 0 -.989" result="groove-highlight"/>
+              <feMerge>
+                <feMergeNode in="groove-shadow"/>
+                <feMergeNode in="groove-highlight"/>
+                <feMergeNode in="ink"/>
+              </feMerge>
+            </filter>
+          </defs>
+        </svg>
 
-      <div class="card-stage">
-        <button class="card-flip small-print" type="button" aria-controls="card-contact" aria-expanded="false" hidden>
-          <svg width="15" height="15" viewBox="0 0 16 16" fill="none" aria-hidden="true">
-            <path d="M12.9 7.3A5 5 0 1 0 12 11m.9-6.8v3.1H9.8" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/>
-          </svg>
-          Flip card
-        </button>
-
-        <div class="business-card">
-          <div class="card-side card-front paper">
-            <svg class="card-surface" width="100%" height="100%" aria-hidden="true" focusable="false">
-              <rect width="100%" height="100%" fill="url(#lit-fibers)"/>
+        <div class="card-stage">
+          <button class="card-flip small-print" type="button" aria-controls="card-contact" aria-expanded="false" hidden>
+            <svg width="15" height="15" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+              <path d="M12.9 7.3A5 5 0 1 0 12 11m.9-6.8v3.1H9.8" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/>
             </svg>
-            <div class="card-corners">
-              <a class="card-phone" href="tel:+18578699213">857.869.9213</a>
-              <div class="card-affiliation">
-                <strong>MBZUAI</strong>
-                <span>Natural Language Processing</span>
+            Flip card
+          </button>
+
+          <div class="business-card">
+            <div class="card-side card-front paper">
+              <svg class="card-surface" width="100%" height="100%" aria-hidden="true" focusable="false">
+                <rect width="100%" height="100%" fill="url(#lit-fibers)"/>
+              </svg>
+              <div class="card-corners">
+                <a class="card-phone" href="tel:+18578699213"><span class="card-ink">857.869.9213</span></a>
+                <div class="card-affiliation card-ink">
+                  <strong>MBZUAI</strong>
+                  <span>Natural Language Processing</span>
+                </div>
+              </div>
+
+              <div class="card-identity card-ink">
+                <h1 id="card-name">Qinrong <span class="card-surname">Cui</span></h1>
+                <p>Graduate Researcher</p>
+              </div>
+
+              <div class="card-details">
+                <span class="card-ink">Beijing / Abu Dhabi</span>
+                <a href="mailto:qinrongcui@foxmail.com"><span class="card-ink">qinrongcui@foxmail.com</span></a>
               </div>
             </div>
 
-            <div class="card-identity">
-              <h1 id="card-name">Qinrong <span class="card-surname">Cui</span></h1>
-              <p>M.Sc. Student</p>
-            </div>
-
-            <div class="card-details">
-              <span>Beijing / Abu Dhabi</span>
-              <a href="mailto:qinrongcui@foxmail.com">qinrongcui@foxmail.com</a>
+            <div class="card-side card-back paper" id="card-contact" inert>
+              <svg class="card-surface" width="100%" height="100%" aria-hidden="true" focusable="false">
+                <rect width="100%" height="100%" fill="url(#lit-fibers)"/>
+              </svg>
+              <div class="card-back-heading">
+                <h2 class="card-ink">Contact</h2>
+                <span class="card-ink">Beijing / Abu Dhabi</span>
+              </div>
+              <dl class="card-contact-list">
+                <div>
+                  <dt class="card-ink">Email</dt>
+                  <dd><a href="mailto:qinrongcui@foxmail.com"><span class="card-ink">qinrongcui@foxmail.com</span></a></dd>
+                </div>
+                <div>
+                  <dt class="card-ink">Phone</dt>
+                  <dd><a href="tel:+18578699213"><span class="card-ink">+1 857.869.9213</span></a></dd>
+                </div>
+                <div>
+                  <dt class="card-ink">GitHub</dt>
+                  <dd><a href="https://github.com/Qinmayyear"><span class="card-ink">@Qinmayyear</span></a></dd>
+                </div>
+                <div>
+                  <dt class="card-ink">LinkedIn</dt>
+                  <dd><a href="https://www.linkedin.com/in/qinrong-cui-92b93a1bb/"><span class="card-ink">Qinrong Cui</span></a></dd>
+                </div>
+              </dl>
             </div>
           </div>
+        </div>
 
-          <div class="card-side card-back paper" id="card-contact" inert>
-            <svg class="card-surface" width="100%" height="100%" aria-hidden="true" focusable="false">
-              <rect width="100%" height="100%" fill="url(#lit-fibers)"/>
-            </svg>
-            <div class="card-back-heading">
-              <h2>Contact</h2>
-              <span>Beijing / Abu Dhabi</span>
+        <a class="open-profile small-print" href="#profile">
+          <span>Open profile</span>
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+            <path d="M8 2v11m-4-4 4 4 4-4" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </a>
+      </section>
+    </div>
+
+    <section class="profile-scene" id="profile" aria-labelledby="profile-title" tabindex="-1">
+      <div class="file-folder">
+        <div class="folder-tab small-print" aria-hidden="true"><span>01</span> Profile</div>
+        <article class="profile-sheet paper">
+          <header>
+            <div class="sheet-meta small-print">
+              <p><span class="sheet-number">01</span> Personal Profile</p>
+              <p>Abu Dhabi, UAE</p>
             </div>
-            <dl class="card-contact-list">
+
+            <div class="sheet-heading">
               <div>
-                <dt>Email</dt>
-                <dd><a href="mailto:qinrongcui@foxmail.com">qinrongcui@foxmail.com</a></dd>
+                <h2 id="profile-title">Qinrong Cui</h2>
+                <p class="sheet-subtitle">Graduate research in natural language processing</p>
               </div>
-              <div>
-                <dt>Phone</dt>
-                <dd><a href="tel:+18578699213">+1 857.869.9213</a></dd>
-              </div>
-              <div>
-                <dt>GitHub</dt>
-                <dd><a href="https://github.com/Qinmayyear">@Qinmayyear</a></dd>
-              </div>
-              <div>
-                <dt>LinkedIn</dt>
-                <dd><a href="https://www.linkedin.com/in/qinrong-cui-92b93a1bb/">Qinrong Cui</a></dd>
-              </div>
-            </dl>
+              <img class="sheet-imprint" src="assets/monogram.svg" width="104" height="104" alt="">
+            </div>
+          </header>
+
+          <p class="sheet-intro">I study how to evaluate multimodal models, especially how well they understand images and generate video. I’m interested in building benchmarks that make those capabilities easier to measure.</p>
+
+          <div class="sheet-columns">
+            <section aria-labelledby="education-title">
+              <h3 class="small-print" id="education-title">Education</h3>
+              <ul class="education-list">
+                <li>
+                  <div class="education-line">
+                    <strong><abbr title="Mohamed bin Zayed University of Artificial Intelligence">MBZUAI</abbr></strong>
+                    <span class="education-date">2025–present</span>
+                  </div>
+                  <p>M.Sc. in Natural Language Processing</p>
+                </li>
+                <li>
+                  <div class="education-line">
+                    <strong>Northeastern University</strong>
+                    <span class="education-date">2021–2025</span>
+                  </div>
+                  <p>B.S. in Computer Science</p>
+                </li>
+              </ul>
+            </section>
+
+            <section aria-labelledby="interests-title">
+              <h3 class="small-print" id="interests-title">Research Interests</h3>
+              <ul class="interest-list">
+                <li>Multimodal language models</li>
+                <li>Video generation evaluation</li>
+                <li>Benchmark development</li>
+              </ul>
+            </section>
+          </div>
+
+          <footer class="sheet-footer small-print">
+            <nav aria-label="Contact">
+              <a href="https://github.com/Qinmayyear">GitHub</a>
+              <a href="https://www.linkedin.com/in/qinrong-cui-92b93a1bb/">LinkedIn</a>
+            </nav>
+            <a class="back-to-card" href="#card"><span aria-hidden="true">↑</span> Back to card</a>
+          </footer>
+        </article>
+        <div class="folder-cover" aria-hidden="true">
+          <div class="folder-label">
+            <p class="small-print">Personal file / 01</p>
+            <p>Qinrong Cui</p>
           </div>
         </div>
       </div>
-
-      <a class="open-profile small-print" href="#profile">
-        <span>View profile</span>
-        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
-          <path d="M8 2v11m-4-4 4 4 4-4" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/>
-        </svg>
-      </a>
-    </section>
-
-    <section class="profile-scene" id="profile" aria-labelledby="profile-title" tabindex="-1">
-      <article class="profile-sheet paper">
-        <header>
-          <div class="sheet-meta small-print">
-            <p><span class="sheet-number">01</span> Personal Profile</p>
-            <p>Abu Dhabi, UAE</p>
-          </div>
-
-          <div class="sheet-heading">
-            <div>
-              <h2 id="profile-title">Qinrong Cui</h2>
-              <p class="sheet-subtitle">M.Sc. student in Natural Language Processing</p>
-            </div>
-            <img class="sheet-imprint" src="assets/monogram.svg" width="104" height="104" alt="">
-          </div>
-        </header>
-
-        <p class="sheet-intro">I study how to evaluate multimodal models, especially how well they understand images and generate video. I’m interested in building benchmarks that make those capabilities easier to measure.</p>
-
-        <div class="sheet-columns">
-          <section aria-labelledby="education-title">
-            <h3 class="small-print" id="education-title">Education</h3>
-            <ul class="education-list">
-              <li>
-                <div class="education-line">
-                  <strong><abbr title="Mohamed bin Zayed University of Artificial Intelligence">MBZUAI</abbr></strong>
-                  <span class="education-date">2025–present</span>
-                </div>
-                <p>M.Sc. in Natural Language Processing</p>
-              </li>
-              <li>
-                <div class="education-line">
-                  <strong>Northeastern University</strong>
-                  <span class="education-date">2021–2025</span>
-                </div>
-                <p>B.S. in Computer Science</p>
-              </li>
-            </ul>
-          </section>
-
-          <section aria-labelledby="interests-title">
-            <h3 class="small-print" id="interests-title">Research Interests</h3>
-            <ul class="interest-list">
-              <li>Multimodal language models</li>
-              <li>Video generation evaluation</li>
-              <li>Benchmark development</li>
-            </ul>
-          </section>
-        </div>
-
-        <footer class="sheet-footer small-print">
-          <nav aria-label="Contact">
-            <a href="https://github.com/Qinmayyear">GitHub</a>
-            <a href="https://www.linkedin.com/in/qinrong-cui-92b93a1bb/">LinkedIn</a>
-          </nav>
-          <a class="back-to-card" href="#card"><span aria-hidden="true">↑</span> Back to card</a>
-        </footer>
-      </article>
     </section>
   </main>
 </body>
