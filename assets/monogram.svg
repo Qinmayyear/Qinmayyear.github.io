@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 104 104" fill="#743c33">
+  <g fill="none" stroke="#743c33">
+    <circle cx="52" cy="52" r="48" stroke-width="1.15"/>
+    <circle cx="52" cy="52" r="43.5" stroke-width=".65"/>
+  </g>
+  <path d="m52 21 2.5 2.5L52 26l-2.5-2.5ZM18 50l2 2-2 2-2-2Zm68 0 2 2-2 2-2-2Z"/>
+  <text x="52" y="59" font-family="Baskerville, Georgia, serif" font-size="30" text-anchor="middle">QC</text>
+  <text x="53" y="75" font-family="monospace" font-size="7" letter-spacing="1.7" text-anchor="middle">ARCHIVE</text>
+</svg>
