@@ -104,6 +104,11 @@ a:focus-visible {
     radial-gradient(ellipse at 49% 43%, transparent 24%, rgb(18 10 6 / 0.45) 100%);
 }
 
+.card-materials {
+  position: absolute;
+  pointer-events: none;
+}
+
 .card-stage {
   position: relative;
   inline-size: min(85vw, 35rem);
@@ -132,15 +137,18 @@ a:focus-visible {
 }
 
 .card-side {
-  --paper-grain: 0.185;
+  --paper-grain: 0.055;
+  --rim-x: var(--ink-rim-x, 0.55px);
+  --rim-y: var(--ink-rim-y, 0.55px);
   display: grid;
   grid-area: 1 / 1;
   min-inline-size: 0;
   padding: 5.4% 6%;
   border-radius: 1px;
   background:
-    radial-gradient(ellipse at 16% 2%, #fff9ed, transparent 74%),
-    linear-gradient(146deg, #efe8d7 25%, #e5dac6);
+    radial-gradient(ellipse at var(--window-x, 18%) var(--window-y, 9%),
+      rgb(255 251 239 / var(--window-glow, 0.65)), transparent 76%),
+    linear-gradient(146deg, #f0e8d7 24%, #e6dac5);
   box-shadow:
     inset 0 0 0 1px rgb(97 74 49 / 0.18),
     inset 0 1px 1px rgb(255 255 255 / 0.7),
@@ -152,9 +160,30 @@ a:focus-visible {
   font: 400 0.75rem/1.22 var(--card-face);
   font-size: clamp(0.6875rem, 2.12cqi, 0.75rem);
   font-variant-caps: small-caps;
-  text-shadow: 0 -0.45px 0 rgb(69 45 30 / 0.38), 0 0.65px 0 rgb(255 252 243 / 0.85);
+  text-shadow:
+    calc(-0.65 * var(--rim-x)) calc(-0.65 * var(--rim-y)) 0 rgb(67 45 31 / 0.30),
+    var(--rim-x) var(--rim-y) 0 rgb(255 250 238 / 0.72);
   -webkit-backface-visibility: hidden;
   backface-visibility: hidden;
+}
+
+.card-surface {
+  position: absolute;
+  z-index: -1;
+  inset: 0;
+  inline-size: 100%;
+  block-size: 100%;
+  border-radius: inherit;
+  mix-blend-mode: soft-light;
+  mask-image: radial-gradient(ellipse at var(--window-x, 18%) var(--window-y, 9%), #000 5%, rgb(0 0 0 / 0.38) 100%);
+  opacity: 0.68;
+  pointer-events: none;
+}
+
+.card-identity,
+.card-back-heading h2 {
+  filter: url("#pressed-ink");
+  text-shadow: none;
 }
 
 .card-front {
@@ -286,14 +315,8 @@ a:focus-visible {
 .card-contact-list a {
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  gap: 0.35em;
   min-block-size: 1.5rem;
   overflow-wrap: anywhere;
-}
-
-.card-contact-list a span {
-  color: var(--oxblood);
 }
 
 .card-flip:not([hidden]) {
@@ -364,7 +387,7 @@ a:focus-visible {
 }
 
 .profile-sheet {
-  --paper-grain: 0.26;
+  --paper-grain: 0.14;
   inline-size: min(100%, 62rem);
   padding: clamp(1.5rem, 4.7vw, 4.25rem) clamp(1.25rem, 6.2vw, 5.25rem);
   border: 1px solid rgb(94 66 43 / 0.24);
@@ -557,6 +580,21 @@ a:focus-visible {
 
   .open-profile:hover svg {
     transform: none;
+  }
+}
+
+@media (forced-colors: active) {
+  .card-surface {
+    display: none;
+  }
+
+  .card-identity,
+  .card-back-heading h2 {
+    filter: none;
+  }
+
+  .card-side {
+    text-shadow: none;
   }
 }
 
