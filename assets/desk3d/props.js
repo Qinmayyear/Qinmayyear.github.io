@@ -80,29 +80,168 @@ export function makeDesk(THREE, grain) {
   return desk;
 }
 
+const stockClamp = (value) => Math.min(1, Math.max(0, value));
+const stockEase = (value) => {
+  const t = stockClamp(value);
+  return t * t * (3 - 2 * t);
+};
+
+function paperPiece(THREE, width, depth, thickness, radius, materials, options = {}) {
+  const halfWidth = width / 2;
+  const halfDepth = depth / 2;
+  const { tab, place = (x, z) => [x, z], columns = 20, rows = 18 } = options;
+  const xCuts = Array.from({ length: columns + 1 }, (_, index) => width * index / columns - halfWidth);
+  for (const sign of [-1, 1]) {
+    for (const step of [0.28, 0.63, 1]) xCuts.push(sign * (halfWidth - step * radius));
+  }
+  if (tab) {
+    for (const step of [0, 0.35, 0.70, 1]) {
+      xCuts.push(tab.start + tab.shoulder * step, tab.end - tab.shoulder * step);
+    }
+  }
+  const cuts = xCuts.sort((a, b) => a - b).filter((cut, index, all) => index === 0 || cut - all[index - 1] > 0.001);
+  const bands = [0, 0.013, ...Array.from({ length: rows - 1 }, (_, index) => (index + 1) / rows), 0.987, 1];
+  const points = [];
+  for (const blend of bands) {
+    for (const x of cuts) {
+      const round = Math.max(0, Math.abs(x) - halfWidth + radius);
+      const inset = radius - Math.sqrt(Math.max(0, radius * radius - round * round));
+      const extension = tab ? tab.depth * stockEase(Math.min(x - tab.start, tab.end - x) / tab.shoulder) : 0;
+      const back = -halfDepth + inset - extension;
+      const front = halfDepth - inset;
+      const z = back + (front - back) * blend;
+      points.push({ position: place(x, z), uv: [x / width + 0.5, 0.5 - z / depth] });
+    }
+  }
+
+  const count = points.length;
+  const stride = cuts.length;
+  const end = bands.length - 1;
+  const positions = [];
+  const uvs = [];
+  const surfaces = [];
+  const indices = [];
+  const geometry = new THREE.BufferGeometry();
+  function vertex({ position: [x, z], uv }, side) {
+    const index = surfaces.length;
+    positions.push(x, 0, z);
+    uvs.push(...uv);
+    surfaces.push(side * thickness / 2);
+    return index;
+  }
+  for (const side of [1, -1]) {
+    const offset = side === 1 ? 0 : count;
+    const start = indices.length;
+    for (const point of points) vertex(point, side);
+    for (let row = 0; row < end; row++) {
+      for (let column = 0; column < stride - 1; column++) {
+        const a = offset + row * stride + column;
+        const b = a + 1;
+        const c = a + stride;
+        const d = c + 1;
+        if (side === 1) indices.push(a, c, b, b, c, d);
+        else indices.push(a, b, c, b, d, c);
+      }
+    }
+    geometry.addGroup(start, indices.length - start, side === 1 ? 0 : 1);
+  }
+
+  const rim = [];
+  for (let column = 0; column < stride; column++) rim.push(column);
+  for (let row = 1; row <= end; row++) rim.push(row * stride + stride - 1);
+  for (let column = stride - 2; column >= 0; column--) rim.push(end * stride + column);
+  for (let row = end - 1; row > 0; row--) rim.push(row * stride);
+  const sideStart = indices.length;
+  for (let index = 0; index < rim.length; index++) {
+    const first = points[rim[index]];
+    const next = points[rim[(index + 1) % rim.length]];
+    const a = vertex(first, 1);
+    const b = vertex(next, 1);
+    const c = vertex(first, -1);
+    const d = vertex(next, -1);
+    indices.push(a, b, c, b, d, c);
+  }
+  geometry.addGroup(sideStart, indices.length - sideStart, 2);
+  const position = new THREE.Float32BufferAttribute(positions, 3);
+  geometry.setAttribute("position", position);
+  geometry.setAttribute("uv", new THREE.Float32BufferAttribute(uvs, 2));
+  geometry.setIndex(indices);
+
+  const mesh = new THREE.Mesh(geometry, materials);
+  mesh.castShadow = true;
+  mesh.receiveShadow = true;
+  return {
+    mesh,
+    shape(heightAt) {
+      for (let index = 0; index < position.count; index++) {
+        position.setY(index, heightAt(position.getX(index), position.getZ(index)) + surfaces[index]);
+      }
+      position.needsUpdate = true;
+      geometry.computeVertexNormals();
+      geometry.computeBoundingSphere();
+    },
+  };
+}
+
+function folderSpine(THREE, depth, material) {
+  const bends = 12;
+  const bands = 18;
+  const geometry = new THREE.PlaneGeometry(1, depth, bends, bands);
+  const position = geometry.getAttribute("position");
+  const mesh = new THREE.Mesh(geometry, material);
+  mesh.castShadow = true;
+  mesh.receiveShadow = true;
+  mesh.frustumCulled = false;
+  return {
+    mesh,
+    bend(angle, base, lid, reach) {
+      const cosine = Math.cos(angle);
+      const sine = Math.sin(angle);
+      for (let row = 0; row <= bands; row++) {
+        const z = (row / bands - 0.5) * depth;
+        const [startX, startY] = base(z);
+        const [endX, endY] = lid(z);
+        const p1x = startX - reach;
+        const p2x = endX - reach * cosine;
+        const p2y = endY - reach * sine;
+        for (let column = 0; column <= bends; column++) {
+          const t = column / bends;
+          const s = 1 - t;
+          const x = s ** 3 * startX + 3 * s * s * t * p1x + 3 * s * t * t * p2x + t ** 3 * endX;
+          const y = (s ** 3 + 3 * s * s * t) * startY + 3 * s * t * t * p2y + t ** 3 * endY;
+          position.setXYZ(row * (bends + 1) + column, x, y, z);
+        }
+      }
+      position.needsUpdate = true;
+      geometry.computeVertexNormals();
+    },
+  };
+}
+
 export function makeFolder(THREE, colorMap, bumpMap) {
   const width = 23.9;
   const depth = 30.4;
   const manila = new THREE.MeshStandardMaterial({
-    color: "#fcf0de", map: colorMap, bumpMap, bumpScale: 0.022, roughness: 0.87,
+    color: "#fcf0de", map: colorMap, bumpMap, bumpScale: 0.034, roughness: 0.88,
   });
-  const edge = new THREE.MeshStandardMaterial({ color: "#ad8350", roughness: 0.92 });
-  const paperEdge = new THREE.MeshStandardMaterial({ color: "#e7dcc5", roughness: 0.91 });
+  const inside = manila.clone();
+  inside.color.set("#f9eee0");
+  const edge = new THREE.MeshStandardMaterial({ color: "#ba945f", roughness: 0.93 });
+  const paperEdge = new THREE.MeshStandardMaterial({ color: "#d8cbb3", roughness: 0.94 });
+  const paper = new THREE.MeshStandardMaterial({ color: "#eee5d2", roughness: 0.92 });
   const folder = new THREE.Group();
-  const base = slab(THREE, width, depth, 0.13, 0.33, 0.027, [manila, edge]);
-  base.position.y = 0.105;
-  folder.add(base);
-
-  const tab = slab(THREE, 7.6, 2.1, 0.125, 0.34, 0.027, [manila, edge]);
-  tab.position.set(6.5, 0.103, -15.65);
-  folder.add(tab);
-
-  for (let i = 0; i < 3; i++) {
-    const sheet = slab(THREE, 21.6, 27.9, 0.029, 0.055, 0.012, paperEdge);
-    sheet.position.set(0.28 + i * 0.06, 0.215 + i * 0.047, 0.12 - i * 0.055);
-    sheet.rotation.y = 0.016 - i * 0.009;
-    folder.add(sheet);
-  }
+  const baseHeight = (x, z) => {
+    const foldOffset = (x + width / 2 - 0.24) / 0.23;
+    const crease = Math.exp(-foldOffset * foldOffset);
+    const perimeter = stockClamp(Math.abs(x) / (width / 2)) ** 5 * stockClamp(Math.abs(z) / (depth / 2)) ** 5;
+    return 0.068 + 0.014 * crease + 0.049 * perimeter + 0.008 * Math.sin(0.37 * z + 0.18 * x);
+  };
+  const base = paperPiece(THREE, width, depth, 0.086, 0.34, [inside, manila, edge], {
+    tab: { start: 2.42, end: 10.38, depth: 1.48, shoulder: 0.82 },
+    columns: 26,
+  });
+  base.shape(baseHeight);
+  folder.add(base.mesh);
 
   const pageTexture = canvasTexture(THREE, 864, 1116, (ctx, w, h) => {
     printGrain(ctx, w, h, "#f3ebdc");
@@ -149,16 +288,34 @@ export function makeFolder(THREE, colorMap, bumpMap) {
     ctx.font = "19px monospace";
     ctx.fillText("QINRONG CUI", 66, 967);
   });
-  const page = flatPrint(THREE, 21.59, 27.89, pageTexture);
-  page.position.set(0.4, 0.344, 0.01);
-  page.rotation.z = 0.002;
-  folder.add(page);
+  const printedPaper = new THREE.MeshStandardMaterial({ map: pageTexture, roughness: 0.92 });
+  const sheets = [
+    { x: 0.21, z: 0.16, yaw: -0.021, height: 0.148 },
+    { x: 0.36, z: 0.22, yaw: 0.017, height: 0.177 },
+    { x: 0.19, z: -0.10, yaw: -0.007, height: 0.204 },
+    { x: 0.35, z: 0.03, yaw: 0.006, height: 0.233 },
+  ];
+  for (const [index, sheet] of sheets.entries()) {
+    const top = index === sheets.length - 1;
+    const piece = paperPiece(THREE, 21.59, 27.89, 0.019, 0.075,
+      [top ? printedPaper : paper, paper, paperEdge], { columns: 16, rows: 16 });
+    piece.shape((x, z) => {
+      const curl = stockClamp((x + 3) / 14) ** 4 * stockClamp((z + 2) / 16) ** 4;
+      return sheet.height + 0.031 * curl + 0.006 * Math.sin(x * 0.25 - z * 0.22);
+    });
+    piece.mesh.position.set(sheet.x, 0, sheet.z);
+    piece.mesh.rotation.y = sheet.yaw;
+    folder.add(piece.mesh);
+  }
 
   const hinge = new THREE.Group();
-  hinge.position.set(-width / 2, 0.41, 0);
-  const lid = slab(THREE, width, depth, 0.13, 0.38, 0.029, [manila, edge]);
-  lid.position.x = width / 2;
-  hinge.add(lid);
+  const seamX = -width / 2;
+  hinge.position.x = seamX;
+  const lid = paperPiece(THREE, width, depth, 0.081, 0.39, [manila, inside, edge], {
+    place: (x, z) => [x + width / 2, z],
+    columns: 26,
+  });
+  hinge.add(lid.mesh);
 
   const labelTexture = canvasTexture(THREE, 520, 222, (ctx, w, h) => {
     printGrain(ctx, w, h, "#e5d7bb");
@@ -171,11 +328,52 @@ export function makeFolder(THREE, colorMap, bumpMap) {
     ctx.font = "58px Baskerville, Georgia, serif";
     ctx.fillText("Qinrong Cui", 34, 151);
   });
-  const label = flatPrint(THREE, 11.5, 4.91, labelTexture);
-  label.position.set(width - 7.1, 0.10, -9.1);
-  label.rotation.z = -0.055;
-  hinge.add(label);
+  const adhesive = new THREE.MeshStandardMaterial({ map: labelTexture, roughness: 0.93 });
+  const labelAngle = -0.055;
+  const label = paperPiece(THREE, 11.5, 4.91, 0.010, 0.08, [adhesive, paper, paperEdge], {
+    columns: 12, rows: 8,
+    place: (x, z) => [
+      width - 7.1 + x * Math.cos(labelAngle) - z * Math.sin(labelAngle),
+      -9.1 + x * Math.sin(labelAngle) + z * Math.cos(labelAngle),
+    ],
+  });
+  label.mesh.castShadow = false;
+  hinge.add(label.mesh);
+  const foldMaterial = inside.clone();
+  foldMaterial.side = THREE.DoubleSide;
+  const spine = folderSpine(THREE, depth - 0.55, foldMaterial);
+  folder.add(spine.mesh);
   folder.add(hinge);
+
+  let lastAngle;
+  hinge.userData.updateFold = () => {
+    const angle = hinge.rotation.z;
+    if (angle === lastAngle) return;
+    lastAngle = angle;
+    const opened = stockEase((angle / Math.PI - 0.60) / 0.40);
+    hinge.position.y = 0.37 - 0.21 * opened;
+    const lidHeight = (x, z) => {
+      const rim = stockClamp(x / width) ** 5;
+      const tip = stockClamp(Math.abs(z) / (depth / 2)) ** 5;
+      const lift = 0.017 * Math.sin(0.29 * x - 0.14 * z) + 0.059 * rim * tip;
+      const settled = 0.060 + x * Math.sin(0.012) - lift;
+      return lift + (settled - lift) * opened;
+    };
+    lid.shape(lidHeight);
+    label.shape((x, z) => lidHeight(x, z) + 0.049);
+
+    const attach = 0.16;
+    const cosine = Math.cos(angle);
+    const sine = Math.sin(angle);
+    spine.bend(angle,
+      (z) => [seamX + attach, baseHeight(seamX + attach, z)],
+      (z) => {
+        const y = lidHeight(attach, z);
+        return [seamX + attach * cosine - y * sine, hinge.position.y + attach * sine + y * cosine];
+      },
+      0.49 - 0.385 * opened);
+  };
+  hinge.userData.updateFold();
   return { folder, hinge };
 }
 
@@ -275,23 +473,29 @@ export function makeTelephone(THREE) {
   return phone;
 }
 
-export function makeRoomReflection(THREE) {
+export function makeRoomReflection(THREE, night = false) {
   const texture = canvasTexture(THREE, 512, 256, (ctx, w, h) => {
     const room = ctx.createLinearGradient(0, 0, 0, h);
-    room.addColorStop(0, "#8c7963");
-    room.addColorStop(0.5, "#735b43");
-    room.addColorStop(1, "#221914");
+    room.addColorStop(0, night ? "#384251" : "#8c7963");
+    room.addColorStop(0.5, night ? "#2e2623" : "#735b43");
+    room.addColorStop(1, night ? "#171213" : "#221914");
     ctx.fillStyle = room;
     ctx.fillRect(0, 0, w, h);
-    const window = ctx.createRadialGradient(114, 89, 7, 114, 89, 95);
-    window.addColorStop(0, "#fff5dc");
-    window.addColorStop(0.44, "#d8b692");
-    window.addColorStop(1, "#d8b69200");
-    ctx.fillStyle = window;
+    const glow = night
+      ? ctx.createRadialGradient(91, 113, 1, 91, 113, 50)
+      : ctx.createRadialGradient(114, 89, 7, 114, 89, 95);
+    glow.addColorStop(0, night ? "#ffd99e" : "#fff5dc");
+    glow.addColorStop(0.44, night ? "#b47849" : "#d8b692");
+    glow.addColorStop(1, "#d8b69200");
+    ctx.fillStyle = glow;
     ctx.fillRect(0, 0, w, h);
-    ctx.fillStyle = "#fff7e2";
-    ctx.fillRect(82, 48, 25, 69);
-    ctx.fillRect(113, 48, 25, 69);
+    ctx.fillStyle = night ? "#ffd6a9" : "#fff7e2";
+    if (night) {
+      ctx.fillRect(73, 110, 36, 7);
+    } else {
+      ctx.fillRect(82, 48, 25, 69);
+      ctx.fillRect(113, 48, 25, 69);
+    }
   });
   texture.mapping = THREE.EquirectangularReflectionMapping;
   return texture;

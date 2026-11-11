@@ -11,7 +11,9 @@
   <link rel="stylesheet" href="assets/site.css?v=desk-terminal">
   <link rel="stylesheet" href="assets/terminal.css?v=desk-terminal">
   <link rel="stylesheet" href="assets/desk3d/scene.css">
+  <link rel="stylesheet" href="assets/dossier.css">
   <script src="assets/site.js?v=desk-terminal" defer></script>
+  <script src="assets/dossier.js" defer></script>
   <script src="assets/desk3d/scene.js" type="module"></script>
 </head>
 <body>
@@ -142,60 +144,73 @@
     </div>
 
     <section class="profile-scene" id="profile" aria-labelledby="profile-title" tabindex="-1">
-      <div class="file-folder">
-        <div class="folder-tab small-print" aria-hidden="true"><span>01</span> Profile</div>
-        <article class="profile-sheet paper">
-          <header>
-            <div class="sheet-meta small-print">
-              <p><span class="sheet-number">01</span> Personal Profile</p>
-              <p>Abu Dhabi, UAE</p>
-            </div>
-
-            <div class="sheet-heading">
-              <div>
-                <h2 id="profile-title">Qinrong Cui</h2>
-                <p class="sheet-subtitle">Graduate research in natural language processing</p>
+      <div class="file-folder dossier">
+        <nav class="dossier-tabs small-print" aria-label="Folder sections">
+          <a class="dossier-tab" id="dossier-profile-tab" href="#profile">Profile</a>
+          <a class="dossier-tab" id="dossier-projects-tab" href="projects/">Projects</a>
+        </nav>
+        <div class="profile-sheet paper">
+          <article id="dossier-profile">
+            <header>
+              <div class="sheet-meta small-print">
+                <p><span class="sheet-number">01</span> Personal Profile</p>
+                <p>Abu Dhabi, UAE</p>
               </div>
-              <img class="sheet-imprint" src="assets/monogram.svg" width="104" height="104" alt="">
+
+              <div class="sheet-heading">
+                <div>
+                  <h2 id="profile-title">Qinrong Cui</h2>
+                  <p class="sheet-subtitle">Graduate research in natural language processing</p>
+                </div>
+                <img class="sheet-imprint" src="assets/monogram.svg" width="104" height="104" alt="">
+              </div>
+            </header>
+
+            <p class="sheet-intro">I study how to evaluate multimodal models, especially how well they understand images and generate video. I’m interested in building benchmarks that make those capabilities easier to measure.</p>
+
+            <div class="sheet-columns">
+              <section aria-labelledby="education-title">
+                <h3 class="small-print" id="education-title">Education</h3>
+                <ul class="education-list">
+                  <li>
+                    <div class="education-line">
+                      <strong><abbr title="Mohamed bin Zayed University of Artificial Intelligence">MBZUAI</abbr></strong>
+                      <span class="education-date">2025–present</span>
+                    </div>
+                    <p>M.Sc. in Natural Language Processing</p>
+                  </li>
+                  <li>
+                    <div class="education-line">
+                      <strong>Northeastern University</strong>
+                      <span class="education-date">2021–2025</span>
+                    </div>
+                    <p>B.S. in Computer Science</p>
+                  </li>
+                </ul>
+              </section>
+
+              <section aria-labelledby="interests-title">
+                <h3 class="small-print" id="interests-title">Research Interests</h3>
+                <ul class="interest-list">
+                  <li>Multimodal language models</li>
+                  <li>Video generation evaluation</li>
+                  <li>Benchmark development</li>
+                </ul>
+              </section>
             </div>
-          </header>
+          </article>
 
-          <p class="sheet-intro">I study how to evaluate multimodal models, especially how well they understand images and generate video. I’m interested in building benchmarks that make those capabilities easier to measure.</p>
-
-          <div class="sheet-columns">
-            <section aria-labelledby="education-title">
-              <h3 class="small-print" id="education-title">Education</h3>
-              <ul class="education-list">
-                <li>
-                  <div class="education-line">
-                    <strong><abbr title="Mohamed bin Zayed University of Artificial Intelligence">MBZUAI</abbr></strong>
-                    <span class="education-date">2025–present</span>
-                  </div>
-                  <p>M.Sc. in Natural Language Processing</p>
-                </li>
-                <li>
-                  <div class="education-line">
-                    <strong>Northeastern University</strong>
-                    <span class="education-date">2021–2025</span>
-                  </div>
-                  <p>B.S. in Computer Science</p>
-                </li>
-              </ul>
-            </section>
-
-            <section aria-labelledby="interests-title">
-              <h3 class="small-print" id="interests-title">Research Interests</h3>
-              <ul class="interest-list">
-                <li>Multimodal language models</li>
-                <li>Video generation evaluation</li>
-                <li>Benchmark development</li>
-              </ul>
-            </section>
-          </div>
+          <section id="dossier-projects" hidden>
+            <header class="dossier-project-header">
+              <h2 id="dossier-project-title">Projects</h2>
+              <a class="small-print" href="projects/">Full research archive</a>
+            </header>
+            <p class="dossier-status" role="status"></p>
+            <div class="dossier-project-content"></div>
+          </section>
 
           <footer class="sheet-footer small-print" id="profile-end" tabindex="-1">
             <nav class="file-navigation" aria-label="Explore the desk">
-              <a class="file-projects" href="projects/"><span aria-hidden="true">02</span> Projects</a>
               <a href="#terminal">Open terminal</a>
             </nav>
             <nav aria-label="Contact">
@@ -204,7 +219,7 @@
               <a class="back-to-card" href="#card">Back to card</a>
             </nav>
           </footer>
-        </article>
+        </div>
         <div class="folder-cover" aria-hidden="true">
           <div class="folder-label">
             <p class="small-print">Personal file / 01</p>
