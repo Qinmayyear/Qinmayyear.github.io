@@ -10,15 +10,30 @@
   <link rel="preload" as="image" href="assets/office.webp">
   <link rel="stylesheet" href="assets/site.css?v=desk-terminal">
   <link rel="stylesheet" href="assets/terminal.css?v=desk-terminal">
+  <link rel="stylesheet" href="assets/desk3d/scene.css">
   <script src="assets/site.js?v=desk-terminal" defer></script>
+  <script src="assets/desk3d/scene.js" type="module"></script>
 </head>
 <body>
   <main class="desk-story">
     <div class="desk-backdrop" aria-hidden="true">
+      <div class="desk-render"></div>
       <div class="desk-camera">
         <img src="assets/walnut-desk.webp" width="1672" height="941" alt="">
       </div>
     </div>
+    <nav class="desk-inspect small-print" aria-label="3D scene preview" hidden>
+      <button type="button" data-desk-view="card">Card</button>
+      <button type="button" data-desk-view="desk">Desk</button>
+      <button type="button" data-desk-view="folder">Folder</button>
+      <button type="button" data-desk-view="crt">CRT</button>
+      <select aria-label="Desk lighting">
+        <option value="day">Daylight</option>
+        <option value="dusk">Dusk</option>
+        <option value="night">Night</option>
+        <option value="local">Local time</option>
+      </select>
+    </nav>
     <div class="desk-arrival" id="card" tabindex="-1">
       <section class="cover" aria-label="Qinrong Cui’s business card">
         <svg class="card-materials" width="0" height="0" aria-hidden="true" focusable="false">

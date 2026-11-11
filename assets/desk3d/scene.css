@@ -1,0 +1,110 @@
+.desk-render,
+.desk-inspect {
+  display: none;
+}
+
+@media screen and (prefers-reduced-motion: no-preference) and (min-height: 31rem) {
+  .desk3d-ready .desk-render {
+    position: absolute;
+    z-index: 1;
+    inset: 0;
+    display: block;
+    opacity: var(--desk3d-visibility, 0);
+    background:
+      linear-gradient(var(--desk3d-room-tint, #271b1338), var(--desk3d-room-tint, #271b1338)),
+      url("../office.webp") center 45% / cover no-repeat;
+  }
+
+  .desk-render canvas {
+    display: block;
+    width: 100%;
+    height: 100%;
+  }
+
+  .desk3d-ready .desk-camera {
+    display: none;
+  }
+
+  .desk3d-ready .desk-arrival {
+    min-block-size: calc(100svh + clamp(28rem, 100svh, 60rem));
+  }
+
+  .desk3d-ready .cover::before {
+    opacity: calc(1 - var(--desk3d-visibility, 0));
+  }
+
+  .desk3d-ready .card-stage {
+    transform: var(--desk3d-card-matrix, none);
+    transform-origin: top left;
+    opacity: var(--desk3d-card-opacity, 1);
+  }
+
+  .desk3d-ready.desk3d-card-down .card-stage {
+    visibility: hidden;
+  }
+
+  .desk3d-ready .business-card {
+    --desk3d-card-attitude: var(--desk3d-attitude, 1);
+    transform:
+      rotateZ(calc(-2.5deg * var(--desk3d-card-attitude)))
+      rotateX(calc((6deg + var(--tilt-x)) * var(--desk3d-card-attitude)))
+      rotateY(calc((-6deg + var(--tilt-y)) * var(--desk3d-card-attitude) + var(--card-turn)));
+  }
+
+  .desk3d-ready .profile-scene {
+    margin-block-start: 0;
+  }
+
+  .desk3d-ready .desk-inspect:not([hidden]) {
+    position: fixed;
+    z-index: 3;
+    inset-block-start: max(0.65rem, env(safe-area-inset-top));
+    inset-inline-end: max(0.65rem, env(safe-area-inset-right));
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+    gap: 2px;
+    max-inline-size: calc(100% - 1.3rem);
+    padding: 3px;
+    border: 1px solid rgb(239 215 180 / 0.24);
+    border-radius: 3px;
+    background: rgb(36 25 18 / 0.92);
+    color: #f2e3cb;
+  }
+
+  .desk-inspect button,
+  .desk-inspect select {
+    min-block-size: 2.75rem;
+    padding-inline: 0.65rem;
+    border: 0;
+    border-radius: 1px;
+    background: transparent;
+    color: inherit;
+    font: inherit;
+    cursor: pointer;
+  }
+
+  .desk-inspect select {
+    border-inline-start: 1px solid rgb(239 215 180 / 0.24);
+    background: #241912;
+  }
+
+  .desk-inspect button:hover,
+  .desk-inspect button:focus-visible {
+    background: rgb(239 215 180 / 0.13);
+  }
+
+  @media (max-width: 35rem) {
+    .desk-inspect button,
+    .desk-inspect select {
+      padding-inline: 0.42rem;
+      letter-spacing: 0.04em;
+    }
+  }
+}
+
+@media print {
+  .desk-inspect {
+    display: none;
+  }
+}

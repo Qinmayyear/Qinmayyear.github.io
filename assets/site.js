@@ -104,7 +104,7 @@
     const approach = viewport * 0.47;
     const remaining = Math.max(0, travelTop + travelHeight);
     const progress = Math.min(1, Math.max(0, 1 - remaining / (travelHeight + approach)));
-    if ((progress === 0 || progress === 1) && progress === lastTerminalProgress) return;
+    if ((progress === 0 || progress === 1) && progress === lastTerminalProgress) return progress;
     lastTerminalProgress = progress;
 
     const { clientWidth: width, clientHeight: height } = backdrop;
@@ -140,6 +140,7 @@
     for (const [property, value] of Object.entries(properties)) {
       desk.style.setProperty(property, typeof value === "number" ? value.toFixed(3) : value);
     }
+    return progress;
   }
 
   function updateScroll() {
@@ -154,7 +155,10 @@
     desk.style.setProperty("--desk-progress", progress.toFixed(3));
     folder.style.setProperty("--folder-progress", (opening * (1 - closing)).toFixed(3));
     arrival.classList.toggle("is-past-card", progress > 0.86);
-    renderTerminal(viewport);
+    const terminal = renderTerminal(viewport);
+    if (desk.classList.contains("desk3d-ready")) {
+      desk.dispatchEvent(new CustomEvent("desk3d-frame", { detail: { arrival: progress, terminal } }));
+    }
   }
 
   function requestScrollUpdate() {
@@ -166,6 +170,11 @@
   desk.classList.add("desk-motion");
   window.addEventListener("scroll", requestScrollUpdate, { passive: true });
   window.addEventListener("resize", requestScrollUpdate);
+  desk.addEventListener("desk3d-ready", requestScrollUpdate);
+  desk.addEventListener("desk3d-light", ({ detail }) => {
+    Object.assign(windowLight, detail);
+    requestLightUpdate();
+  });
   deskMotion.addEventListener("change", requestScrollUpdate);
   reducedMotion.addEventListener("change", requestLightUpdate);
   requestScrollUpdate();
