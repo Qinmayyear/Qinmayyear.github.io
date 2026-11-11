@@ -76,6 +76,7 @@ a:focus-visible {
 }
 
 .desk-backdrop {
+  --desk-shade: linear-gradient(152deg, rgb(38 23 14 / 0.08), rgb(27 17 12 / 0.43));
   position: sticky;
   z-index: -1;
   inset-block-start: 0;
@@ -92,7 +93,7 @@ a:focus-visible {
   position: absolute;
   inset: 0;
   background:
-    linear-gradient(152deg, rgb(38 23 14 / 0.08), rgb(27 17 12 / 0.43)),
+    var(--desk-shade),
     url("walnut-desk.webp") 50% 38% / cover no-repeat;
   content: "";
 }
@@ -680,6 +681,28 @@ span.card-ink {
   text-decoration: underline;
 }
 
+.file-navigation .file-projects {
+  gap: 0.7em;
+  padding-inline: 0.75rem;
+  border: 1px solid rgb(113 75 44 / 0.29);
+  border-radius: 3px 3px 1px 1px;
+  background: linear-gradient(145deg, #e9d6b4, #dfc49b);
+  color: #493020;
+}
+
+.file-projects span {
+  color: var(--oxblood);
+}
+
+#profile-end {
+  scroll-margin-block-start: min(65svh, max(0px, 100svh - 8rem));
+}
+
+#profile-end:focus-visible {
+  outline: 2px solid var(--oxblood);
+  outline-offset: 4px;
+}
+
 @media screen and (prefers-reduced-motion: no-preference) and (min-height: 31rem) {
   .desk-motion .desk-arrival {
     min-block-size: calc(100svh + clamp(14rem, 56svh, 31rem));
@@ -737,8 +760,7 @@ span.card-ink {
     transform: rotateY(calc(-173deg * var(--folder-progress, 0)));
   }
 
-  .desk-motion .file-folder:focus-within .folder-cover,
-  .desk-motion .profile-scene:focus-visible .folder-cover {
+  .desk-motion .file-folder:has(a:focus-visible) .folder-cover {
     transform: rotateY(-173deg);
   }
 }
@@ -808,6 +830,7 @@ span.card-ink {
   .folder-tab,
   .folder-cover,
   .profile-sheet::before,
+  .file-navigation,
   .back-to-card {
     display: none;
   }

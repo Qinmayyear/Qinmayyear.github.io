@@ -1,0 +1,194 @@
+.projects-page {
+  isolation: isolate;
+}
+
+.projects-page::before {
+  position: fixed;
+  z-index: -1;
+  inset: 0;
+  background:
+    linear-gradient(155deg, rgb(34 22 14 / 0.25), rgb(26 17 11 / 0.6)),
+    url("walnut-desk.webp") 50% 36% / cover no-repeat;
+  content: "";
+}
+
+.projects-scene {
+  display: grid;
+  justify-items: center;
+  padding: clamp(3.2rem, 7vw, 5.5rem) clamp(0.65rem, 5vw, 3rem) clamp(2.5rem, 7vw, 5rem);
+}
+
+.research-folder {
+  inline-size: min(100%, 72rem);
+}
+
+.research-sheet {
+  padding-inline: clamp(1.05rem, 4.85vw, 4.4rem);
+}
+
+.research-header .sheet-meta {
+  align-items: center;
+  column-gap: 0.75rem;
+  padding-block: 0 0.35rem;
+}
+
+.research-header .sheet-meta a {
+  display: inline-flex;
+  align-items: center;
+  min-block-size: 2.75rem;
+}
+
+.research-heading {
+  margin-block: clamp(1.9rem, 5vw, 4rem) clamp(1.85rem, 5vw, 3.8rem);
+}
+
+.research-heading > p:first-child {
+  color: var(--muted-ink);
+}
+
+.research-heading h1 {
+  margin-block: 0.38rem 0.75rem;
+  font-size: clamp(3.45rem, 10vw, 7rem);
+  font-weight: 400;
+  letter-spacing: -0.063em;
+  line-height: 0.96;
+}
+
+.research-heading > p:last-child {
+  max-inline-size: 47ch;
+  color: var(--muted-ink);
+  font-size: clamp(1.125rem, 2.4vw, 1.35rem);
+}
+
+.research-list {
+  padding: 0;
+  list-style: none;
+}
+
+.research-list > li {
+  padding-block: clamp(1.6rem, 4.7vw, 3.15rem);
+  border-block-start: 1px solid var(--rule);
+}
+
+.research-list > li:last-child {
+  padding-block-end: 0;
+}
+
+.research-entry {
+  display: grid;
+  align-items: center;
+  gap: 0.9rem clamp(1.6rem, 5vw, 4.5rem);
+}
+
+.research-copy {
+  min-inline-size: 0;
+}
+
+.research-index {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  color: var(--oxblood);
+}
+
+.research-index > span {
+  padding-inline: 0.28rem;
+  border: 1px solid #9f7865;
+  border-radius: 1px;
+  font-size: 0.64rem;
+}
+
+.research-copy h2 {
+  margin-block-start: 0.65rem;
+  font-size: clamp(1.72rem, 4.4vw, 3rem);
+  font-weight: 400;
+  letter-spacing: -0.047em;
+  line-height: 1.05;
+  overflow-wrap: anywhere;
+}
+
+.research-copy h2 span {
+  display: block;
+  margin-block-start: 0.4rem;
+  color: var(--oxblood);
+  font-size: clamp(1rem, 2.1vw, 1.25rem);
+  font-style: italic;
+  letter-spacing: normal;
+  line-height: 1.25;
+}
+
+.research-venue {
+  margin-block: 0.95rem 0.5rem;
+  color: var(--muted-ink);
+}
+
+.research-copy > p:last-of-type {
+  max-inline-size: 58ch;
+}
+
+.research-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0 1.3rem;
+  margin-block-start: 0.55rem;
+}
+
+.research-links a {
+  display: inline-flex;
+  align-items: center;
+  min-block-size: 2.75rem;
+  color: var(--oxblood);
+}
+
+.research-figure {
+  min-inline-size: 0;
+  margin: 0;
+}
+
+.figure-print {
+  display: block;
+  padding: clamp(0.3rem, 1vw, 0.6rem);
+  border: 1px solid #c7b9a3;
+  background: #fdfbf5;
+  box-shadow: 2px 3px 0 #d9cbb4;
+}
+
+.figure-print img {
+  display: block;
+  inline-size: 100%;
+  block-size: auto;
+}
+
+.research-figure figcaption {
+  display: grid;
+  gap: 0.23rem;
+  margin-block-start: 0.65rem;
+  color: var(--muted-ink);
+  font-size: 0.98rem;
+  line-height: 1.3;
+}
+
+.figure-credit {
+  font: 400 0.7rem/1.45 var(--index-face);
+}
+
+@media (min-width: 49rem) {
+  .research-entry {
+    grid-template-columns: minmax(0, 1.12fr) minmax(0, 1fr);
+  }
+}
+
+@media print {
+  .projects-page::before {
+    display: none;
+  }
+
+  .projects-scene {
+    display: block;
+    padding: 0;
+  }
+
+  .research-list > li {
+    break-inside: avoid;
+  }
+}

@@ -3,6 +3,11 @@
   const arrival = desk.querySelector(".desk-arrival");
   const cover = arrival.querySelector(".cover");
   const folder = desk.querySelector(".file-folder");
+  const terminalTravel = desk.querySelector(".terminal-travel");
+  const backdrop = desk.querySelector(".desk-backdrop");
+  const deskPhoto = backdrop.querySelector("img");
+  const photoWidth = Number(deskPhoto.getAttribute("width"));
+  const photoHeight = Number(deskPhoto.getAttribute("height"));
   const stage = cover.querySelector(".card-stage");
   const card = stage.querySelector(".business-card");
   const front = card.querySelector(".card-front");
@@ -14,12 +19,14 @@
   const windowLight = { x: -0.63, y: -0.61, z: 0.48 };
   const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
   const deskMotion = window.matchMedia("(prefers-reduced-motion: no-preference) and (min-height: 31rem)");
+  const compactDesk = window.matchMedia("(max-width: 42rem)");
   const finePointer = window.matchMedia("(hover: hover) and (pointer: fine)");
   const degreesPerRadian = 180 / Math.PI;
   let scrollFrame = null;
   let lightFrame = null;
   let lastAzimuth;
   let lastElevation;
+  let lastTerminalProgress;
 
   function renderCardLight() {
     lightFrame = null;
@@ -86,9 +93,53 @@
   });
   flipButton.hidden = false;
 
-  function easeProgress(progress) {
-    const fraction = Math.min(1, Math.max(0, progress));
+  function easeProgress(progress, start = 0, end = 1) {
+    const fraction = Math.min(1, Math.max(0, (progress - start) / (end - start)));
     return fraction * fraction * (3 - 2 * fraction);
+  }
+
+  function renderTerminal(viewport) {
+    const travelTop = terminalTravel.getBoundingClientRect().top;
+    const travelHeight = terminalTravel.offsetHeight;
+    const approach = viewport * 0.47;
+    const remaining = Math.max(0, travelTop + travelHeight);
+    const progress = Math.min(1, Math.max(0, 1 - remaining / (travelHeight + approach)));
+    if ((progress === 0 || progress === 1) && progress === lastTerminalProgress) return;
+    lastTerminalProgress = progress;
+
+    const { clientWidth: width, clientHeight: height } = backdrop;
+    const compact = compactDesk.matches;
+    const fit = Math.max(width / photoWidth, height / photoHeight);
+    const pan = easeProgress(progress, compact ? 0.07 : 0.12, 0.66);
+    const zoom = 1 + 2.55 * easeProgress(progress, 0.14, 0.60) + 10.2 * easeProgress(progress, 0.59, 0.91);
+    const scale = fit * zoom;
+    const scaledWidth = photoWidth * scale;
+    const scaledHeight = photoHeight * scale;
+    // The CRT's glass sits against the top-right edge of the desk photograph.
+    const startLeft = (width - scaledWidth) * (compact ? 0.53 : 0.50);
+    const startTop = (height - scaledHeight) * (compact ? 0.40 : 0.38);
+    const glassLeft = width * 0.52 - scaledWidth * 0.928;
+    const glassTop = height * 0.48 - scaledHeight * 0.051;
+    const left = Math.max(width - scaledWidth, Math.min(0, startLeft + (glassLeft - startLeft) * pan));
+    const top = Math.max(height - scaledHeight, Math.min(0, startTop + (glassTop - startTop) * pan));
+    const wake = easeProgress(progress, 0.84, 0.998);
+    const consoleVisible = progress >= 0.865;
+    const properties = {
+      "--camera-visibility": progress > 0 && progress < 0.97 ? "visible" : "hidden",
+      "--camera-left": left.toFixed(2) + "px",
+      "--camera-top": top.toFixed(2) + "px",
+      "--camera-scale": scale,
+      "--glass-opacity": easeProgress(progress, 0.83, 0.97),
+      "--console-light": easeProgress(progress, 0.865, 0.997),
+      "--console-visibility": consoleVisible ? "visible" : "hidden",
+      "--console-lift": (consoleVisible ? -remaining : 0).toFixed(1) + "px",
+      "--wake-position": (-24 + 132 * wake).toFixed(1) + "%",
+      "--wake-glow": 4 * wake * (1 - wake),
+    };
+
+    for (const [property, value] of Object.entries(properties)) {
+      desk.style.setProperty(property, typeof value === "number" ? value.toFixed(3) : value);
+    }
   }
 
   function updateScroll() {
@@ -96,12 +147,14 @@
     const travel = Math.max(1, arrival.offsetHeight - cover.offsetHeight);
     const progress = easeProgress(-arrival.getBoundingClientRect().top / travel);
     const viewport = window.innerHeight;
-    const folderTop = folder.getBoundingClientRect().top;
-    const opening = easeProgress((viewport * 0.88 - folderTop) / (viewport * 0.60));
+    const folderBounds = folder.getBoundingClientRect();
+    const opening = easeProgress((viewport * 0.88 - folderBounds.top) / (viewport * 0.60));
+    const closing = easeProgress((viewport * 0.49 - folderBounds.bottom) / (viewport * 0.45));
 
     desk.style.setProperty("--desk-progress", progress.toFixed(3));
-    folder.style.setProperty("--folder-progress", opening.toFixed(3));
+    folder.style.setProperty("--folder-progress", (opening * (1 - closing)).toFixed(3));
     arrival.classList.toggle("is-past-card", progress > 0.86);
+    renderTerminal(viewport);
   }
 
   function requestScrollUpdate() {
@@ -135,4 +188,66 @@
     card.style.removeProperty("--tilt-y");
     requestLightUpdate();
   });
+
+  const guestbook = desk.querySelector(".terminal-form");
+  const guestName = guestbook.elements.namedItem("name");
+  const guestMessage = guestbook.elements.namedItem("message");
+  const log = desk.querySelector(".terminal-log");
+  const emptyLog = desk.querySelector(".terminal-empty");
+  const status = desk.querySelector(".terminal-status");
+  const guestbookKey = "qinrong-terminal-notes-v1";
+  const noteLimit = 8;
+  let notes = [];
+
+  try {
+    const saved = JSON.parse(localStorage.getItem(guestbookKey));
+    if (Array.isArray(saved)) {
+      notes = saved.filter((note) => (
+        typeof note?.name === "string" && typeof note.message === "string"
+      )).slice(0, noteLimit);
+    }
+  } catch {
+    status.textContent = "Saved notes are unavailable.";
+  }
+
+  function renderNotes() {
+    const entries = notes.map((note) => {
+      const entry = document.createElement("li");
+      const name = document.createElement("strong");
+      const message = document.createElement("p");
+      name.textContent = note.name;
+      message.textContent = note.message;
+      entry.append(name, message);
+      return entry;
+    });
+    log.replaceChildren(...entries);
+    emptyLog.hidden = entries.length > 0;
+  }
+
+  guestbook.addEventListener("submit", (event) => {
+    event.preventDefault();
+    const message = guestMessage.value.trim();
+    if (!message) {
+      status.textContent = "Enter a note first.";
+      guestMessage.focus();
+      return;
+    }
+
+    const name = guestName.value.trim() || "Visitor";
+    const updated = [{ name, message }, ...notes].slice(0, noteLimit);
+    try {
+      localStorage.setItem(guestbookKey, JSON.stringify(updated));
+    } catch {
+      status.textContent = "This browser could not save your note.";
+      return;
+    }
+
+    notes = updated;
+    renderNotes();
+    guestbook.reset();
+    status.textContent = "Note saved on this device.";
+  });
+
+  renderNotes();
+  guestbook.hidden = false;
 })();

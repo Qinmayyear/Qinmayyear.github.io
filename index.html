@@ -3,17 +3,22 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="description" content="Qinrong Cui, M.Sc. student in Natural Language Processing at MBZUAI.">
+  <meta name="description" content="Qinrong Cui, graduate researcher in Natural Language Processing at MBZUAI.">
   <meta name="theme-color" content="#211813">
   <title>Qinrong Cui</title>
   <link rel="icon" type="image/svg+xml" href="assets/monogram.svg">
   <link rel="preload" as="image" href="assets/office.webp">
-  <link rel="stylesheet" href="assets/site.css?v=desk-file">
-  <script src="assets/site.js?v=desk-file" defer></script>
+  <link rel="stylesheet" href="assets/site.css?v=desk-terminal">
+  <link rel="stylesheet" href="assets/terminal.css?v=desk-terminal">
+  <script src="assets/site.js?v=desk-terminal" defer></script>
 </head>
 <body>
   <main class="desk-story">
-    <div class="desk-backdrop" aria-hidden="true"></div>
+    <div class="desk-backdrop" aria-hidden="true">
+      <div class="desk-camera">
+        <img src="assets/walnut-desk.webp" width="1672" height="941" alt="">
+      </div>
+    </div>
     <div class="desk-arrival" id="card" tabindex="-1">
       <section class="cover" aria-label="Qinrong Cui’s business card">
         <svg class="card-materials" width="0" height="0" aria-hidden="true" focusable="false">
@@ -173,12 +178,16 @@
             </section>
           </div>
 
-          <footer class="sheet-footer small-print">
+          <footer class="sheet-footer small-print" id="profile-end" tabindex="-1">
+            <nav class="file-navigation" aria-label="Explore the desk">
+              <a class="file-projects" href="projects/"><span aria-hidden="true">02</span> Projects</a>
+              <a href="#terminal">Open terminal</a>
+            </nav>
             <nav aria-label="Contact">
               <a href="https://github.com/Qinmayyear">GitHub</a>
               <a href="https://www.linkedin.com/in/qinrong-cui-92b93a1bb/">LinkedIn</a>
+              <a class="back-to-card" href="#card">Back to card</a>
             </nav>
-            <a class="back-to-card" href="#card"><span aria-hidden="true">↑</span> Back to card</a>
           </footer>
         </article>
         <div class="folder-cover" aria-hidden="true">
@@ -186,6 +195,46 @@
             <p class="small-print">Personal file / 01</p>
             <p>Qinrong Cui</p>
           </div>
+        </div>
+      </div>
+    </section>
+
+    <div class="terminal-travel" aria-hidden="true"></div>
+    <section class="terminal-scene" id="terminal" aria-labelledby="terminal-title" tabindex="-1">
+      <div class="terminal-window">
+        <div class="terminal-glass">
+          <header class="terminal-header small-print">
+            <p>03 / Desk terminal</p>
+            <p class="terminal-session">Local session</p>
+          </header>
+
+          <div class="terminal-heading">
+            <h2 id="terminal-title">Guestbook<span aria-hidden="true">_</span></h2>
+            <p>Leave a short note. Notes are saved in this browser.</p>
+          </div>
+
+          <div class="terminal-desk">
+            <form class="terminal-form" hidden>
+              <label for="guest-name">Name <span>(optional)</span></label>
+              <input id="guest-name" name="name" type="text" maxlength="40" autocomplete="nickname" placeholder="Visitor">
+              <label for="guest-message">Note</label>
+              <textarea id="guest-message" name="message" rows="3" maxlength="280" required></textarea>
+              <button type="submit">Save note</button>
+              <p class="terminal-status" role="status"></p>
+            </form>
+
+            <section class="terminal-notes" aria-labelledby="terminal-notes-title">
+              <h3 class="small-print" id="terminal-notes-title">Notes on this device</h3>
+              <p class="terminal-empty">No notes yet.</p>
+              <ul class="terminal-log"></ul>
+              <noscript><p>Enable JavaScript to save a note.</p></noscript>
+            </section>
+          </div>
+
+          <nav class="terminal-footer small-print" aria-label="Desk navigation">
+            <a href="#profile-end">Back to desk</a>
+            <a href="projects/">Projects</a>
+          </nav>
         </div>
       </div>
     </section>

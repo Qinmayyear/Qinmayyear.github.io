@@ -1,0 +1,55 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="920" height="486" viewBox="0 0 920 486" role="img" aria-labelledby="title description">
+  <title id="title">Solar Rankine cycle with battery storage</title>
+  <desc id="description">Solar heat drives an organic Rankine cycle, which produces electricity for a building. Excess electricity charges a battery for later use.</desc>
+  <defs>
+    <marker id="heat-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto">
+      <path d="m0 0 10 5-10 5z" fill="#a96335"/>
+    </marker>
+    <marker id="power-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto">
+      <path d="m0 0 10 5-10 5z" fill="#536358"/>
+    </marker>
+  </defs>
+  <rect width="920" height="486" fill="#faf7ee"/>
+  <g fill="none" stroke="#d2c1a8" stroke-width="2">
+    <path d="M42 76h836M42 443h836"/>
+  </g>
+  <g font-family="monospace" font-size="19" letter-spacing="2" fill="#755440">
+    <text x="44" y="53">SYSTEM OVERVIEW</text>
+    <text x="876" y="53" text-anchor="end">ORC + BATTERY</text>
+  </g>
+  <g stroke-width="3" fill="none">
+    <path d="M254 202h99" stroke="#a96335" marker-end="url(#heat-arrow)"/>
+    <path d="M566 202h99" stroke="#536358" marker-end="url(#power-arrow)"/>
+    <path d="M462 267v42" stroke="#536358" marker-end="url(#power-arrow)"/>
+    <path d="M568 365h200v-96" stroke="#536358" marker-end="url(#power-arrow)"/>
+  </g>
+  <g font-family="sans-serif" font-size="17" text-anchor="middle">
+    <text x="303" y="185" fill="#845135">Heat</text>
+    <text x="617" y="185" fill="#49584e">Power</text>
+    <text x="618" y="346" fill="#49584e" text-anchor="start">Later use</text>
+  </g>
+  <g stroke="#b7a489" stroke-width="2">
+    <rect x="44" y="126" width="208" height="140" rx="4" fill="#f4e7cc"/>
+    <rect x="357" y="126" width="208" height="140" rx="4" fill="#f4e7cc"/>
+    <rect x="669" y="126" width="208" height="140" rx="4" fill="#f4e7cc"/>
+    <rect x="357" y="314" width="208" height="102" rx="4" fill="#e9ebdc"/>
+  </g>
+  <g fill="none" stroke="#765338" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+    <path d="m122 181 12-21h45l-12 21zM128 171h45m-23-11-12 21m27-21-12 21m-4 0v11m-14 0h28"/>
+    <circle cx="461" cy="174" r="21"/>
+    <path d="M461 174q-15-2-8-15 7 1 8 15Zm0 0q7-12 16 0-4 6-16 0Zm0 0q7 13-7 15-5-6 7-15Z"/>
+    <path d="M751 194v-32h43v32m-50 0h57m-41-21h6m12 0h6m-24 10h6m12 0h6"/>
+  </g>
+  <g fill="none" stroke="#536358" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+    <rect x="441" y="333" width="36" height="22" rx="2"/>
+    <path d="M477 341h5v6h-5m-21-3h9m-4.5-4.5v9"/>
+  </g>
+  <g font-family="Georgia, serif" font-size="25" text-anchor="middle" fill="#352a22">
+    <text x="148" y="223">Solar thermal</text>
+    <text x="148" y="248">collectors</text>
+    <text x="461" y="223">Organic Rankine</text>
+    <text x="461" y="248">cycle</text>
+    <text x="773" y="235">Building</text>
+    <text x="461" y="389">Battery storage</text>
+  </g>
+</svg>
